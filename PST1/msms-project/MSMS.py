@@ -128,7 +128,36 @@ def front_desk_lookup(term):
     find_teachers(term)
     
     
+# --- Additional small functions --- 
+def find_teacher_speciality(speciality):
+    """THIS IS TO FIND ALL TEACHERS WITH THIS SPECIALITY"""
+    list = []
+    for teachers in teacher_db:
+        if teachers.speciality.casefold() == speciality.casefold():
+            list.append(teachers)
+    if list == []:
+        print("Unfortunately, there are no teacher with this speciality.")
+    else:    
+        for teachers in list:
+            print(f"{teachers.name} | {teachers.speciality} ")
+
     
+def find_student_instrument(instrument):
+    """To find students enrolled in requested instrument"""
+    list = []
+    if student_db == []:
+        print("No students registered yet!")
+    else:
+        for students in student_db:
+            temp_instrument = [item.casefold() for item in students.enrolled_in]
+            if instrument.casefold() in temp_instrument:
+                list.append(students)
+        if list == []:
+            print("Unfortunately, there are no students with this enrollment...")
+        else:    
+            for students in list:
+                print(f"{students.name} | ID = {students.id} | {students.enrolled_in} ")
+
 # --- Main Application ---
 def main():
     """Runs the main interactive menu for the receptionist."""
@@ -143,6 +172,8 @@ def main():
         print("3. Lookup Student or Teacher")
         print("4. (Admin) List all Students")
         print("5. (Admin) List all Teachers")
+        print("6. Find teachers with specific specialty")
+        print("7. Find students with specific enrollments")
         print("q. Quit")
         
         choice = input("Enter your choice: ")
@@ -168,6 +199,10 @@ def main():
             list_students()
         elif choice == '5':
             list_teachers()
+        elif choice == '6':
+            find_teacher_speciality( input(f"Enter your desired specialty: "))
+        elif choice == '7':
+            find_student_instrument(input("Enter highlighted enrollments: "))
         elif choice.lower() == 'q':
             print("Exiting program. Goodbye!")
             break
