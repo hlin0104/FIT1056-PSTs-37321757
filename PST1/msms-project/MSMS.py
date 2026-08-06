@@ -141,21 +141,21 @@ def find_teacher_speciality(speciality):
         for teachers in list:
             print(f"{teachers.name} | {teachers.speciality} ")
 
-    
+
 def find_student_instrument(instrument):
     """To find students enrolled in requested instrument"""
-    list = []
+    list = [] #to check if there are students registered yet
     if student_db == []:
-        print("No students registered yet!")
+        print("No students registered yet!") #report if there arent any students found
     else:
-        for students in student_db:
+        for students in student_db: #runs through every student registered, and withdraw information about their enrolled instrument
             temp_instrument = [item.casefold() for item in students.enrolled_in]
             if instrument.casefold() in temp_instrument:
-                list.append(students)
-        if list == []:
+                list.append(students) #append students in the created empty list if any students were found 
+        if list == []: # if no students found report a message
             print("Unfortunately, there are no students with this enrollment...")
         else:    
-            for students in list:
+            for students in list: #report the students found 
                 print(f"{students.name} | ID = {students.id} | {students.enrolled_in} ")
 
 # --- Main Application ---
