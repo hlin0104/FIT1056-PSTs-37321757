@@ -172,8 +172,7 @@ def main():
         print("3. Lookup Student or Teacher")
         print("4. (Admin) List all Students")
         print("5. (Admin) List all Teachers")
-        print("6. Find teachers with specific specialty")
-        print("7. Find students with specific enrollments")
+        print("6. Find students with specific enrollments")
         print("q. Quit")
         
         choice = input("Enter your choice: ")
@@ -200,8 +199,6 @@ def main():
         elif choice == '5':
             list_teachers()
         elif choice == '6':
-            find_teacher_speciality( input(f"Enter your desired specialty: "))
-        elif choice == '7':
             find_student_instrument(input("Enter highlighted enrollments: "))
         elif choice.lower() == 'q':
             print("Exiting program. Goodbye!")
