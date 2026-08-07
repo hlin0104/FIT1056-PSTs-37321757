@@ -18,8 +18,9 @@ List all students/teachers
 Find students enrolled in specific instrument
 
 Run code in VS code to run the entire program
-Data is temporary and will be resetted every time the program was run again
+Data is temporary and will be resetted every time the program was run again, and has to be run in python language for a version at least above 3.10
 
 Upon running, it will show an interactive menu. Where user can choose which function to run by inputting integer numbers. Or ‘q’ to exit the program.
+
 
 IN THE PROJECT, IVE USED AI IN THE END TO CHECK FOR ANY SYNTAX ERRORS
