@@ -237,15 +237,6 @@ def main():
         print("q. Quit and Save")
         
         choice = input("Enter your choice: ")
-        while True:
-                try:
-                    choice = int(choice)
-                    if choice <= 0: 
-                        print('Pleasae enter a positive integer number!')
-                    else:
-                        break
-                except ValueError:
-                    print('Please enter a valid integer value')
         
         made_change = False # A flag to track if we need to save
         if choice == '1':
