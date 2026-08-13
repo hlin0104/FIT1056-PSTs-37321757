@@ -74,7 +74,7 @@ def update_student(student_id, **fields):
             student.update(fields)
             print(f"Student {student_id} updated.")
             return
-    print(f'Error: Teacher with ID {student_id} not found.')
+    print(f'Error: Student with ID {student_id} not found.')
 
 def remove_student(student_id):
     """
@@ -101,6 +101,7 @@ def remove_student(student_id):
                         student["id"] -= 1
                 app_data["next_student_id"] -= 1
         return 
+    print(f'Student with ID: {student_id} was not found!')
                 
             
 def remove_teacher(teacher_id):
@@ -110,10 +111,10 @@ def remove_teacher(teacher_id):
     sorts teachers id as well in order
     
     '''
-    for teacher in app_data["teacher"]:
+    for teacher in app_data["teachers"]:
         if teacher_id == teacher["id"]:
             removed_teacher = teacher
-            app_data["teacher"].remove(removed_teacher)
+            app_data["teachers"].remove(removed_teacher)
             print(f"Teacher {removed_teacher["name"]} with ID: {removed_teacher["id"]} was removed from the system.")
             while True:
                 userinput = input('Did you remove the correct teacher(Y/N)?:    ').casefold()
@@ -124,9 +125,11 @@ def remove_teacher(teacher_id):
             if userinput =='n':
                 app_data["teachers"].insert(removed_teacher["id"]-1, removed_teacher)
             else:
-                for teacher in app_data["teacher"]:
+                for teacher in app_data["teachers"]:
                     if teacher["id"] > removed_teacher["id"]:
                         teacher["id"] -= 1
                 app_data["next_teacher_id"] -= 1
         return
-            
+    print(f'Teacher with ID: {teacher_id} was not found!')
+        
+    
