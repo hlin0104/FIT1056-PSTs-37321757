@@ -214,6 +214,11 @@ def print_student_card(student_id):
         print(f"Printed student card to {filename}.")
     else:
         print(f"Error: Could not print card, student {student_id} not found.")
+        
+def print_student_list():
+    '''prints all students recorded in system'''
+    for student in app_data["students"]:
+        print(f"  ID: {student["id"]}, Name: {student["name"]}, Enrolled in: {student["enrolled_in"]}")
 
 # --- Main Application Loop ---
 def main():
@@ -226,9 +231,21 @@ def main():
         print("2. Print Student Card")
         print("3. Update Teacher Info")
         print("4. Remove Student")
+        print('5. Register a new student')
+        print('6. Enrol a current student')
+        print('7. Print all student lists')
         print("q. Quit and Save")
         
         choice = input("Enter your choice: ")
+        while True:
+                try:
+                    choice = int(choice)
+                    if choice <= 0: 
+                        print('Pleasae enter a positive integer number!')
+                    else:
+                        break
+                except ValueError:
+                    print('Please enter a valid integer value')
         
         made_change = False # A flag to track if we need to save
         if choice == '1':
@@ -300,6 +317,29 @@ def main():
                     print('Please enter a valid integer value')
             remove_student(student_id)
             
+        elif choice == '5':
+            made_change = True
+            name = input('Enter name for student being registered:  ')
+            instrument = input('Enter their enrolled instrument, leave blank if none:   ')
+            front_desk_register(name, instrument)
+        
+        
+        elif choice == '6':
+            while True:
+                student_id = input('Enter student_ID:   ')
+                try:
+                    student_id = int(student_id)
+                    if student_id <= 0: 
+                        print('Pleasae enter a positive integer number!')
+                    else:
+                        break
+                except ValueError:
+                    print('Please enter a valid integer value')
+            instrument = input('Enter instrument:')
+            front_desk_enrol(student_id, instrument)
+            
+        elif choice == '7':
+            print_student_list()
             
             
             
