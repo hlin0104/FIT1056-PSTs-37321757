@@ -95,13 +95,15 @@ def remove_student(student_id):
                     break
             if userinput =='n':
                 app_data["students"].insert(removed_student["id"]-1, removed_student)
+                return
             else:
                 for student in app_data["students"]:
                     if student["id"] > removed_student["id"]:
                         student["id"] -= 1
                 app_data["next_student_id"] -= 1
-        return 
+                return
     print(f'Student with ID: {student_id} was not found!')
+
                 
             
 def remove_teacher(teacher_id):
@@ -136,6 +138,15 @@ def remove_teacher(teacher_id):
 
 
 #moved front desk functions from pst1 and modified so data was stored in lists, rather than objects.
+def teacher_register(name, speciality):
+    '''registers teachers in system'''
+    teacher_id = app_data["next_teacher_id"]
+    app_data["next_teacher_id"] += 1
+    new_teacher = {"name": name, "id": teacher_id, "speciality": speciality}
+    app_data["teachers"].append(new_teacher)
+    print(f'Teacher {new_teacher["name"]} has been registered with ID {new_teacher["id"]}.')
+    
+    
 def front_desk_register(name, instrument):
     """High-level function to register a new student and enrol them."""
     student_id = app_data["next_student_id"]
@@ -219,6 +230,11 @@ def print_student_list():
     '''prints all students recorded in system'''
     for student in app_data["students"]:
         print(f"  ID: {student["id"]}, Name: {student["name"]}, Enrolled in: {student["enrolled_in"]}")
+        
+def print_teacher_list():
+    '''prints all teachers recorded in system'''
+    for teacher in app_data["teachers"]:
+        print(f"  ID: {teacher["id"]}, Name: {teacher["name"]}, Speciality: {teacher["speciality"]}")
 
 # --- Main Application Loop ---
 def main():
@@ -234,6 +250,8 @@ def main():
         print('5. Register a new student')
         print('6. Enrol a current student')
         print('7. Print all student lists')
+        print('8. Teacher registeration.')
+        print('9. Lists all teachers.')
         print("q. Quit and Save")
         
         choice = input("Enter your choice: ")
@@ -280,14 +298,18 @@ def main():
                 teacher_id = input('Enter teacher ID:   ')
                 try:
                     teacher_id = int(teacher_id)
-                    if teacher_id <= 0: 
+                    if teacher_id <= 0:
                         print('Pleasae enter a positive integer number!')
                     else:
                         break
                 except ValueError:
                     print('Please enter a valid integer value')
-            new_details = input("Enter teacher's details including fields(speciality), in form of keyword: (argument)")
-            update_teacher(teacher_id, new_details)
+            new_name = input("Enter teacher's updated details for name(or just original):   ")
+            new_speciality = input("Enter teacher's updated details for speciality or just original):  ")
+            update_teacher(teacher_id, name = new_name, speciality = new_speciality)
+
+
+            
                 
                     
                 
@@ -332,7 +354,13 @@ def main():
         elif choice == '7':
             print_student_list()
             
-            
+        elif choice == '8':
+            name = input('Enter name of teacher:    ')
+            speciality = input('Enter speciality of teacher:    ')
+            teacher_register(name, speciality)            
+        
+        elif choice == '9':
+            print_teacher_list()
             
         elif choice.lower() == 'q':
             print("Saving final changes and exiting.")
