@@ -136,7 +136,7 @@ def remove_teacher(teacher_id):
 
 
 #moved front desk functions from pst1 and modified so data was stored in lists, rather than objects.
-def front_desk_register(name, instrument=None):
+def front_desk_register(name, instrument):
     """High-level function to register a new student and enrol them."""
     student_id = app_data["next_student_id"]
     new_student = {"name": name, "id": student_id, "enrolled_in": []}
@@ -311,7 +311,7 @@ def main():
         elif choice == '5':
             made_change = True
             name = input('Enter name for student being registered:  ')
-            instrument = input('Enter their enrolled instrument, leave blank if none:   ')
+            instrument = input('Enter their enrolled instrument:   ')
             front_desk_register(name, instrument)
         
         
@@ -326,7 +326,7 @@ def main():
                         break
                 except ValueError:
                     print('Please enter a valid integer value')
-            instrument = input('Enter instrument:')
+            instrument = input('Enter instrument:   ')
             front_desk_enrol(student_id, instrument)
             
         elif choice == '7':
