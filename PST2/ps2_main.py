@@ -69,6 +69,7 @@ def update_teacher(teacher_id, **fields):
     print(f"Error: Teacher with ID {teacher_id} not found.")
     
 def update_student(student_id, **fields):
+    '''Finds student by ID and updates their data with provided fields'''
     for student in app_data['students']:
         if student['id'] == student_id:
             student.update(fields)
