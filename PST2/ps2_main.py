@@ -132,4 +132,41 @@ def remove_teacher(teacher_id):
         return
     print(f'Teacher with ID: {teacher_id} was not found!')
         
+
+
+
+#moved front desk functions from pst1 and modified so data was stored in lists, rather than objects.
+def front_desk_register(name, instrument=None):
+    """High-level function to register a new student and enrol them."""
+    student_id = app_data["next_student_id"]
+    new_student = {"name": name, "id": student_id, "enrolled_in": []}
+    app_data["students"].append(new_student)
+    app_data["next_student_id"] += 1
+    if instrument != None:
+        front_desk_enrol(student_id, instrument)
+        print(f"Front Desk: Successfully registered '{name}' and enrolled them in '{instrument}'.")
     
+def find_student_by_id(student_id):
+    """A new helper to find one student by their exact ID."""
+    # TODO: Loop through student_db. If a student's ID matches student_id, return the student object.
+    for student in app_data["students"]:
+        if student["id"] == student_id:
+            return student
+    # TODO: If the loop finishes without finding a match, return None.
+    return None
+
+def front_desk_enrol(student_id, instrument):
+    """High-level function to enrol an existing student in a course."""
+    # TODO: Use your new find_student_by_id() helper.
+    student = find_student_by_id(student_id)
+    # TODO: If the student is found, append the instrument to their 'enrolled_in' list.
+    if student:
+        student['enrolled_in'].append(instrument)
+        print(f"Front Desk: Enrolled student {student_id} in '{instrument}'.")
+    else:
+        # TODO: If the student is not found, print an error message like "Error: Student ID not found."
+        print(f"Error: Student ID {student_id} not found.")
+
+
+
+
