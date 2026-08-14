@@ -81,6 +81,7 @@ def remove_student(student_id):
     """
     Removes a student from the data store.
     Fixes all student IDs and ensured that they were still in ascending order and not skipping numbers
+    contains while loop to validate input 
     """
     # TODO: Find the student dictionary in app_data['students'] with the matching ID.
     for student in app_data["students"]:
@@ -112,7 +113,7 @@ def remove_teacher(teacher_id):
     
     removes teacher from system with specified teacher id
     sorts teachers id as well in order
-    
+    along with validating user inputs
     '''
     for teacher in app_data["teachers"]:
         if teacher_id == teacher["id"]:
@@ -228,12 +229,12 @@ def print_student_card(student_id):
         print(f"Error: Could not print card, student {student_id} not found.")
         
 def print_student_list():
-    '''prints all students recorded in system'''
+    '''prints all students and their info recorded in system'''
     for student in app_data["students"]:
         print(f"  ID: {student["id"]}, Name: {student["name"]}, Enrolled in: {student["enrolled_in"]}")
         
 def print_teacher_list():
-    '''prints all teachers recorded in system'''
+    '''prints all teachers and their info recorded in system'''
     for teacher in app_data["teachers"]:
         print(f"  ID: {teacher["id"]}, Name: {teacher["name"]}, Speciality: {teacher["speciality"]}")
 
@@ -261,6 +262,8 @@ def main():
         made_change = False # A flag to track if we need to save
         if choice == '1':
             # TODO: Get student_id and course_id from user, then call check_in().
+            '''Validates user input and calls for check in function'''
+            
             made_change = True
             while True:
                 student_id = input('Enter student_ID:   ')
@@ -277,6 +280,7 @@ def main():
             
         elif choice == '2':
             # TODO: Get student_id, then call print_student_card().
+            '''Validates user inout and calls function to print student card'''
             while True:
                 student_id = input('Enter student_ID:   ')
                 try:
@@ -295,6 +299,17 @@ def main():
         elif choice == '3':
             # TODO: Get teacher_id and new details, then call update_teacher().
             # Example: update_teacher(1, speciality="Advanced Piano")
+            '''
+            Validates user input
+            updates the teachers details, either name or field
+            it updates based off preset keyword, as user input cant be used as key
+            
+            *extra features:
+                validates input
+                it first prints a confirmation message asking if its changing the right teacher
+                and only changes features when where is an input, as user and leave blank if they only wanna change one input
+            
+            '''
             made_change = True
             while True:
                 teacher_id = input('Enter teacher ID:   ')
@@ -320,6 +335,17 @@ def main():
         elif choice == '4':
             made_change =  True
             student_id = input("Enter student ID:   ")
+            ''' 
+            Validates user input
+            updates the student details, either name or instrument(enrolled_in)
+            it updates based off preset keyword, as user input cant be used as key
+            
+            *extra features:
+            it first prints a confirmation message asking if its changing the right student
+            and only changes features when where is an input, as user and leave blank if they only wanna change one input
+            
+            '''
+            
             while True:
                 try:
                     student_id = int(student_id)
@@ -343,13 +369,25 @@ def main():
                 
         elif choice == '5':
             # TODO: Get student_id, then call remove_student().
+            '''
+            
+            Gets student ID and removes student from system
+            
+            *extra features:
+                validates uwser input
+                organises student IDs in ascending order
+                prints out a message asking if they are removing the correct student
+                reverts change if user said 'no'
+                continues change and organises student id and modifies next_student id
+                
+            '''
             made_change = True
             while True:
                 student_id = input('Enter student_ID:   ')
                 try:
                     student_id = int(student_id)
                     if student_id <= 0: 
-                        print('Pleasae enter a positive integer number!')
+                        print('Please enter a positive integer number!')
                     else:
                         break
                 except ValueError:
@@ -359,6 +397,10 @@ def main():
             
             
         elif choice == '6':
+            '''
+            registering student, takes name and enrolled instrument and stores in database
+            
+            '''
             made_change = True
             name = input('Enter name for student being registered:  ')
             instrument = input('Enter their enrolled instrument:   ')
@@ -367,6 +409,13 @@ def main():
         
         
         elif choice == '7':
+            '''
+            enrolling students with instrumetns
+            *extra features:
+                identifies if user entered correct student ID
+                
+            '''
+            
             while True:
                 student_id = input('Enter student_ID:   ')
                 try:
@@ -381,14 +430,29 @@ def main():
             front_desk_enrol(student_id, instrument)
             
         elif choice == '8':
+            '''
+            goes through all students in data bases and prints details for all students
+            
+            '''
+            
             print_student_list()
             
         elif choice == '9':
+            '''
+            registers teachers into system
+            takes name and speciality
+            '''
+            
             name = input('Enter name of teacher:    ')
             speciality = input('Enter speciality of teacher:    ')
             teacher_register(name, speciality)            
         
         elif choice == '10':
+            '''
+            prints all teachers in the database
+            
+            '''
+            
             print_teacher_list()
             
         elif choice.lower() == 'q':
