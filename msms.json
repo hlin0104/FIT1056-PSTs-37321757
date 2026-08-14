@@ -1,0 +1,31 @@
+{
+    "students": [
+        {
+            "name": "Bob",
+            "id": 1,
+            "enrolled_in": "Piano, guitar",
+            "speciality": "Drums"
+        }
+    ],
+    "teachers": [
+        {
+            "name": "John",
+            "id": 1,
+            "speciality": "Drums"
+        },
+        {
+            "name": "Bob",
+            "id": 2,
+            "speciality": "Drums"
+        }
+    ],
+    "attendance": [
+        {
+            "student_id": 1,
+            "course_id": "fit1011",
+            "timestamp": "2026-08-13T20:16:00.088955"
+        }
+    ],
+    "next_student_id": 2,
+    "next_teacher_id": 3
+}
