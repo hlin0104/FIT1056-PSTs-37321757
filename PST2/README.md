@@ -52,17 +52,16 @@ file locally so records persist between sessions!
 - **`find_student_by_id(student_id)`** — Helper that searches
   `app_data["students"]` for a matching ID and returns the record (or
   `None`).
-- **`front_desk_enrol(student_id, instrument)`** — Enrolls an existing
-  student (found via `find_student_by_id`) in a given instrument/course.
+- **`front_desk_enrol(student_id, instrument)`** — Enrolls instrument an existing
+  student 
 
 ### Receptionist
 - **`check_in(student_id, course_id, timestamp=None)`** — Records a
-  student's attendance for a course, timestamped with the current time by
-  default.
+  student's attendance for a course, timestamped with the current time by default.
 
 ### Reporting / Output
 - **`print_student_card(student_id)`** — Writes a text-file "ID badge" for
-  a student (`{student_id}_card.txt`) containing their ID, name, and
+  a student containing their ID, name, and
   enrolled instrument(s).
 - **`print_student_list()`** — Prints all students and their details to
   the console.
@@ -78,8 +77,7 @@ file locally so records persist between sessions!
 
 ## Extra Features
 
-These are enhancements beyond the base `TODO` requirements, as called out
-in the functions' own docstrings:
+These are enhancements beyond the base `TODO` requirements, as called out in the functions' own docstrings:
 
 - **`remove_student(student_id)`**
   - Validates that the student ID exists before removing.
@@ -112,11 +110,7 @@ in the functions' own docstrings:
     rather than forcing them to re-enter both fields every time.
 
 - **Student update flow**
-  - Same pattern as the teacher update flow: shows the student's current
-    name and enrolled instrument for confirmation, and allows blank
-    input to preserve the existing value for name or instrument.
+  - Same pattern as the teacher update flow: shows the student's current name and enrolled instrument for confirmation, and allows blank input to preserve the existing value for name or instrument.
 
 - **Input validation loops**
-  - All menu options that require a student or teacher ID loop until the
-    user enters a valid positive integer, catching non-numeric input and
-    zero/negative values with clear error messages before proceeding.
+  - All menu options that require a student or teacher ID loop until the user enters a valid positive integer, catching non-numeric input and zero/negative values with clear error messages before proceeding.
