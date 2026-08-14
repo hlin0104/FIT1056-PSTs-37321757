@@ -5,6 +5,13 @@
             "id": 1,
             "enrolled_in": "Piano, guitar",
             "speciality": "Drums"
+        },
+        {
+            "name": "heath",
+            "id": 2,
+            "enrolled_in": [
+                ""
+            ]
         }
     ],
     "teachers": [
@@ -26,6 +33,6 @@
             "timestamp": "2026-08-13T20:16:00.088955"
         }
     ],
-    "next_student_id": 2,
+    "next_student_id": 3,
     "next_teacher_id": 3
 }
