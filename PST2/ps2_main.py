@@ -87,7 +87,7 @@ def remove_student(student_id):
         if student_id == student["id"]:
             removed_student = student
             app_data["students"].remove(student)
-            print(f'Student {student["name"]} with {student["id"]} has been removed from the system')
+            print(f'Student {student["name"]} with ID: {student["id"]} has been removed from the system')
             while True:
                 userinput = input('Did you remove the correct student(Y/N)?:    ').casefold()
                 if userinput not in ('n', 'y'):
@@ -247,12 +247,13 @@ def main():
         print("1. Check-in Student")
         print("2. Print Student Card")
         print("3. Update Teacher Info")
-        print("4. Remove Student")
-        print('5. Register a new student')
-        print('6. Enrol a current student')
-        print('7. Print all student lists')
-        print('8. Teacher registeration.')
-        print('9. Lists all teachers.')
+        print("4. Update Student Info")
+        print("5. Remove Student")
+        print('6. Register a new student')
+        print('7. Enrol a current student')
+        print('8. List all student')
+        print('9. Teacher registeration.')
+        print('10. Lists all teachers.')
         print("q. Quit and Save")
         
         choice = input("Enter your choice: ")
@@ -305,18 +306,42 @@ def main():
                         break
                 except ValueError:
                     print('Please enter a valid integer value')
-            new_name = input("Enter teacher's updated details for name(or just original):   ")
-            new_speciality = input("Enter teacher's updated details for speciality or just original):  ")
+            print(f'The teacher you are changing is {app_data["teachers"][teacher_id-1]["name"]} with speciality {app_data["teachers"][teacher_id-1]["speciality"]}')
+            new_name = input("Enter teacher's updated details for name(or leave blank):   ")
+            new_speciality = input("Enter teacher's updated details for speciality(or leave blank):  ")
+            if new_name == '':
+                new_name =  app_data["teachers"][teacher_id-1]["name"]
+            if new_speciality == '':
+                new_speciality = app_data["teachers"][teacher_id-1]["speciality"]
             update_teacher(teacher_id, name = new_name, speciality = new_speciality)
 
 
-            
+        
+        elif choice == '4':
+            made_change =  True
+            student_id = input("Enter student ID:   ")
+            while True:
+                try:
+                    student_id = int(student_id)
+                    if student_id <= 0:
+                        print('Please enter a positive integer number!')
+                    else:
+                        break
+                except ValueError:
+                    print('Please enter an integer value.')
+            student = find_student_by_id(student_id)
+            print(f'The student you are changing is {student["name"]}, enrolled in {student["enrolled_in"]}')
+            new_name = input("Enter student's updated details for name(or leave blank):   ")
+            new_instrument = input("Enter student's updated details for speciality(or leave blank):  ")
+            if new_name == '':
+                new_name =  app_data["students"][student_id-1]["name"]
+            if new_instrument == '':
+                new_instrument = app_data["students"][student_id-1]["enrolled_in"]
+            update_student(student_id, name = new_name, enrolled_in = new_instrument)
                 
                     
                 
-            
-            
-        elif choice == '4':
+        elif choice == '5':
             # TODO: Get student_id, then call remove_student().
             made_change = True
             while True:
@@ -331,20 +356,23 @@ def main():
                     print('Please enter a valid integer value')
             remove_student(student_id)
             
-        elif choice == '5':
+            
+            
+        elif choice == '6':
             made_change = True
             name = input('Enter name for student being registered:  ')
             instrument = input('Enter their enrolled instrument:   ')
             front_desk_register(name, instrument)
         
         
-        elif choice == '6':
+        
+        elif choice == '7':
             while True:
                 student_id = input('Enter student_ID:   ')
                 try:
                     student_id = int(student_id)
                     if student_id <= 0: 
-                        print('Pleasae enter a positive integer number!')
+                        print('Please enter a positive integer number!')
                     else:
                         break
                 except ValueError:
@@ -352,15 +380,15 @@ def main():
             instrument = input('Enter instrument:   ')
             front_desk_enrol(student_id, instrument)
             
-        elif choice == '7':
+        elif choice == '8':
             print_student_list()
             
-        elif choice == '8':
+        elif choice == '9':
             name = input('Enter name of teacher:    ')
             speciality = input('Enter speciality of teacher:    ')
             teacher_register(name, speciality)            
         
-        elif choice == '9':
+        elif choice == '10':
             print_teacher_list()
             
         elif choice.lower() == 'q':
