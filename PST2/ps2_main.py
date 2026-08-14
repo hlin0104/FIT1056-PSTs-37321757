@@ -152,11 +152,11 @@ def teacher_register(name, speciality):
 def front_desk_register(name, instrument):
     """High-level function to register a new student and enrol them."""
     student_id = app_data["next_student_id"]
-    new_student = {"name": name, "id": student_id, "enrolled_in": []}
+    new_student = {"name": name, "id": student_id, "enrolled_in": ''}
     app_data["students"].append(new_student)
     app_data["next_student_id"] += 1
     if instrument != None:
-        front_desk_enrol(student_id, instrument)
+        update_student(student_id, enrolled_in = instrument)
         print(f"Front Desk: Successfully registered '{name}' and enrolled them in '{instrument}'.")
     
 def find_student_by_id(student_id):
@@ -174,7 +174,7 @@ def front_desk_enrol(student_id, instrument):
     student = find_student_by_id(student_id)
     # TODO: If the student is found, append the instrument to their 'enrolled_in' list.
     if student:
-        student['enrolled_in'].append(instrument)
+        student['enrolled_in'] = instrument
         print(f"Front Desk: Enrolled student {student_id} in '{instrument}'.")
     else:
         # TODO: If the student is not found, print an error message like "Error: Student ID not found."
@@ -184,7 +184,11 @@ def front_desk_enrol(student_id, instrument):
 
 # --- New Receptionist Features ---
 def check_in(student_id, course_id, timestamp=None):
-    """Records a student's attendance for a course."""
+    """Records a student's attendance for a course.
+    
+    *extra feat:
+    added student ID validation and printed message with name
+    """
     if timestamp is None:
         # TODO: Get the current time as a string using datetime.datetime.now().isoformat()
         timestamp = datetime.datetime.now().isoformat()
@@ -197,8 +201,13 @@ def check_in(student_id, course_id, timestamp=None):
         "timestamp": timestamp
     }
     # TODO: Append this new record to the app_data['attendance'] list.
-    app_data['attendance'].append(check_in_record)
-    print(f"Receptionist: Student {student_id} checked into {course_id}.")
+    for student in app_data["students"]:
+        if student_id == student["id"]:
+            app_data['attendance'].append(check_in_record)
+            print(f"Receptionist: Student {student["name"]} with ID: {student_id} checked into {course_id}.")
+            break
+    else:
+        print(f'no student found with ID {student_id}')
 
 
 
@@ -251,10 +260,9 @@ def main():
         print("4. Update Student Info")
         print("5. Remove Student")
         print('6. Register a new student')
-        print('7. Enrol a current student')
-        print('8. List all student')
-        print('9. Teacher registeration.')
-        print('10. Lists all teachers.')
+        print('7. List all student')
+        print('8. Teacher registeration.')
+        print('9. Lists all teachers.')
         print("q. Quit and Save")
         
         choice = input("Enter your choice: ")
@@ -270,7 +278,7 @@ def main():
                 try:
                     student_id = int(student_id)
                     if student_id <= 0: 
-                        print('Pleasae enter a positive integer number!')
+                        print('Please enter a positive integer number!')
                     else:
                         break
                 except ValueError:
@@ -286,7 +294,7 @@ def main():
                 try:
                     student_id = int(student_id)
                     if student_id <= 0: 
-                        print('Pleasae enter a positive integer number!')
+                        print('Please enter a positive integer number!')
                     else:
                         break
                 except ValueError:
@@ -316,19 +324,25 @@ def main():
                 try:
                     teacher_id = int(teacher_id)
                     if teacher_id <= 0:
-                        print('Pleasae enter a positive integer number!')
+                        print('Please enter a positive integer number!')
                     else:
                         break
                 except ValueError:
                     print('Please enter a valid integer value')
-            print(f'The teacher you are changing is {app_data["teachers"][teacher_id-1]["name"]} with speciality {app_data["teachers"][teacher_id-1]["speciality"]}')
-            new_name = input("Enter teacher's updated details for name(or leave blank):   ")
-            new_speciality = input("Enter teacher's updated details for speciality(or leave blank):  ")
-            if new_name == '':
-                new_name =  app_data["teachers"][teacher_id-1]["name"]
-            if new_speciality == '':
-                new_speciality = app_data["teachers"][teacher_id-1]["speciality"]
-            update_teacher(teacher_id, name = new_name, speciality = new_speciality)
+                    
+            for teacher in app_data["teachers"]:
+                if teacher_id == teacher["id"]:
+                    print(f'The teacher you are changing is {app_data["teachers"][teacher_id-1]["name"]} with speciality {app_data["teachers"][teacher_id-1]["speciality"]}')
+                    new_name = input("Enter teacher's updated details for name(or leave blank):   ")
+                    new_speciality = input("Enter teacher's updated details for speciality(or leave blank):  ")
+                    if new_name == '':
+                        new_name =  app_data["teachers"][teacher_id-1]["name"]
+                    if new_speciality == '':
+                        new_speciality = app_data["teachers"][teacher_id-1]["speciality"]
+                    update_teacher(teacher_id, name = new_name, speciality = new_speciality)
+                    break
+            else:
+                print(f'no teachers found with ID {teacher_id}')
 
 
         
@@ -355,15 +369,19 @@ def main():
                         break
                 except ValueError:
                     print('Please enter an integer value.')
-            student = find_student_by_id(student_id)
-            print(f'The student you are changing is {student["name"]}, enrolled in {student["enrolled_in"]}')
-            new_name = input("Enter student's updated details for name(or leave blank):   ")
-            new_instrument = input("Enter student's updated details for speciality(or leave blank):  ")
-            if new_name == '':
-                new_name =  app_data["students"][student_id-1]["name"]
-            if new_instrument == '':
-                new_instrument = app_data["students"][student_id-1]["enrolled_in"]
-            update_student(student_id, name = new_name, enrolled_in = new_instrument)
+            for student in app_data["students"]:
+                if student_id == student["id"]:
+                    print(f'The student you are changing is {student["name"]}, enrolled in {student["enrolled_in"]}')
+                    new_name = input("Enter student's updated details for name(or leave blank):   ")
+                    new_instrument = input("Enter student's updated details for speciality(or leave blank):  ")
+                    if new_name == '':
+                        new_name =  app_data["students"][student_id-1]["name"]
+                    if new_instrument == '':
+                        new_instrument = app_data["students"][student_id-1]["enrolled_in"]
+                    update_student(student_id, name = new_name, enrolled_in = new_instrument)
+                    break
+            else:
+                print(f'No student found with ID: {student_id}')
                 
                     
                 
@@ -374,7 +392,7 @@ def main():
             Gets student ID and removes student from system
             
             *extra features:
-                validates uwser input
+                validates user input
                 organises student IDs in ascending order
                 prints out a message asking if they are removing the correct student
                 reverts change if user said 'no'
@@ -410,34 +428,13 @@ def main():
         
         elif choice == '7':
             '''
-            enrolling students with instrumetns
-            *extra features:
-                identifies if user entered correct student ID
-                
-            '''
-            
-            while True:
-                student_id = input('Enter student_ID:   ')
-                try:
-                    student_id = int(student_id)
-                    if student_id <= 0: 
-                        print('Please enter a positive integer number!')
-                    else:
-                        break
-                except ValueError:
-                    print('Please enter a valid integer value')
-            instrument = input('Enter instrument:   ')
-            front_desk_enrol(student_id, instrument)
-            
-        elif choice == '8':
-            '''
             goes through all students in data bases and prints details for all students
             
             '''
             
             print_student_list()
             
-        elif choice == '9':
+        elif choice == '8':
             '''
             registers teachers into system
             takes name and speciality
@@ -447,7 +444,7 @@ def main():
             speciality = input('Enter speciality of teacher:    ')
             teacher_register(name, speciality)            
         
-        elif choice == '10':
+        elif choice == '9':
             '''
             prints all teachers in the database
             
