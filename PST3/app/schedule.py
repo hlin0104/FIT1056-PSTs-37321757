@@ -130,5 +130,17 @@ class ScheduleManager:
         self._save_data() # This will now correctly save the attendance log.
         print(f"Success: Student {student.name} checked into {course.name}.")
         return True
+    
+    
+    
+    def find_class_on_day(self, day):
+        '''an extra function that checks for lessons on a given day'''
+        lessonFound = [] #empty list to store information later
+        for course in self.courses: #cycles through all the courses in library
+            for lesson in course.lesson: # cycles through all the lesson time for each course
+                if day.casefold() == lesson['day'].casefold():
+                    lessonFound.append(lesson) #append lesson to list if found day matching.
+        
+        return None
 
     # TODO: Also implement find_student_by_id and find_course_by_id helper methods.
