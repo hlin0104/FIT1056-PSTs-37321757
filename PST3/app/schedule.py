@@ -85,3 +85,50 @@ class ScheduleManager:
         # TODO: Write 'data_to_save' to the JSON file.
         with open(self.data_path, 'w') as f:
             json.dump(data_to_save, f, indent=4)
+            
+    
+    
+    # loops through teh list of student objects
+    # extracts the student ID and compare with given input ID
+    # returns the student if student_id found
+    def find_student_by_id(self, student_id):
+        """A new helper to find one student by their exact ID."""
+        # TODO: Loop through student_db. If a student's ID matches student_id, return the student object.
+        for student in self.students:
+            if student.id == student_id:
+                return student
+        # TODO: If the loop finishes without finding a match, return None.
+        return None
+    
+
+    # loops through teh list of courses objects
+    # extracts the course ID and compare with given input ID
+    # returns the curse if course_id found
+    def find_course_bu_id(self, course_id):
+        for course in self.courses:
+            if course_id == course.id:
+                return course
+        return None
+        
+
+    def check_in(self, student_id, course_id):
+        import datetime
+        """Records a student's attendance for a course after validation."""
+        # This implementation remains the same, but it will now function correctly.
+        student = self.find_student_by_id(student_id)
+        course = self.find_course_by_id(course_id)
+        
+        if not student or not course:
+            print("Error: Check-in failed. Invalid Student or Course ID.")
+            return False
+            
+        timestamp = datetime.datetime.now().isoformat()
+        check_in_record = {"student_id": student_id, "course_id": course_id, "timestamp": timestamp}
+        
+        # This line will now work without causing an AttributeError.
+        self.attendance_log.append(check_in_record)
+        self._save_data() # This will now correctly save the attendance log.
+        print(f"Success: Student {student.name} checked into {course.name}.")
+        return True
+
+    # TODO: Also implement find_student_by_id and find_course_by_id helper methods.
