@@ -365,7 +365,17 @@ class ScheduleManager:
     def reg_students(self):
         ''' A function to register new students into system '''
         name = input('Enter student name:   ')
-        course_id = self.course_input() # calls for a method attribute requesting user for a course_id
+        course_id = input('Enter course ID, or leave blank:     ') # allow user to enter a course_ids
+        try:
+            course_id = int(course_id) # first try converting into integers
+            course = self.find_course_by_id(course_id)
+            if course is None:
+                print(f'No course found with ID {course_id}. Please check again.')
+                course_id = None
+        except ValueError: #if captures an error, that means an incorrect course ID has been given or no ID has been given
+            print('Incorrect/No course ID inputted!')
+            course_id = None
+            
         if course_id == None:
             print('Students will be registered, but no course has been enrolled for this student.')
             newStudent = StudentUser(self.next_student_id, name) #creates a new  object for student
@@ -421,6 +431,10 @@ class ScheduleManager:
         
         student = self.find_student_by_id(student_id)
         course = self.find_course_by_id(course_id)
+        
+        if student == None or course == None: #exits program, so user can check list of courses and students
+            return
+        
         
         #extra function, checks if students are already enrolled in the course.
         if course_id in student.enrolled_course_ids:

@@ -5,14 +5,15 @@
             "name": "Alice Johnson",
             "enrolled_course_ids": [
                 101,
-                103
+                103,
+                102
             ]
         },
         {
             "id": 2,
             "name": "Bob Williams",
             "enrolled_course_ids": [
-                102
+                101
             ]
         }
     ],
@@ -26,6 +27,11 @@
             "id": 2,
             "name": "Mr. David Fret",
             "speciality": "Guitar"
+        },
+        {
+            "id": 3,
+            "name": "Josh",
+            "speciality": "Drums"
         }
     ],
     "courses": [
@@ -35,7 +41,8 @@
             "instrument": "Piano",
             "teacher_id": 1,
             "enrolled_student_ids": [
-                1
+                1,
+                2
             ],
             "lessons": [
                 {
@@ -58,7 +65,7 @@
             "instrument": "Guitar",
             "teacher_id": 2,
             "enrolled_student_ids": [
-                2
+                1
             ],
             "lessons": [
                 {
@@ -78,6 +85,36 @@
                 1
             ],
             "lessons": []
+        },
+        {
+            "id": 104,
+            "name": "Beginner Trumpet",
+            "instrument": "Trumpet",
+            "teacher_id": 2,
+            "enrolled_student_ids": [],
+            "lessons": [
+                {
+                    "lesson_id": 4,
+                    "day": "Tuesday",
+                    "start_time": "20:00",
+                    "room": "GG02"
+                }
+            ]
+        },
+        {
+            "id": 105,
+            "name": "Advanced Drums",
+            "instrument": "drums",
+            "teacher_id": 1,
+            "enrolled_student_ids": [],
+            "lessons": [
+                {
+                    "lesson_id": 5,
+                    "day": "Friday",
+                    "start_time": "10;00",
+                    "room": "JG02"
+                }
+            ]
         }
     ],
     "attendance": [
@@ -90,6 +127,15 @@
             "student_id": 2,
             "course_id": 102,
             "timestamp": "2025-07-14T16:02:45.654321"
+        },
+        {
+            "student_id": 2,
+            "course_id": 103,
+            "timestamp": "2026-09-02T18:13:22.402910"
         }
-    ]
+    ],
+    "next_student_id": 5,
+    "next_teacher_id": 4,
+    "next_course_id": 106,
+    "next_lesson_id": 6
 }
