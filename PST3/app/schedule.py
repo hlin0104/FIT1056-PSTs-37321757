@@ -115,6 +115,12 @@ class ScheduleManager:
         print(f"Success: Student {student.name} checked into {course.name}.")
         return True
     
+    def print_attendance_log(self):
+        '''prints all attendance log records'''
+        for log in self.attendance_log: # loops through all dictionaries in attendance lists
+            print(f"Student ID: {log['student_id']} | Course ID: {log['course_id']} | Time: {log['timestamp']}")
+            
+    
     
     
     def find_class_on_day(self, day):
@@ -255,6 +261,7 @@ class ScheduleManager:
         
     def course_input(self):
         ''' This function performs course validation, to see if course ID entered by users are valid, and returns a course ID if valid'''
+        '''EXTRA helper function created'''
         while True:
             course_id = input('Enter course ID: ')
             try:
@@ -314,6 +321,7 @@ class ScheduleManager:
         
     def teacher_id_input(self):
         '''Gets teacher ID inputs and validates, returns teacher ID'''
+        '''EXTRA helper function created'''
         while True:
             teacher_id = input('Enter teacher ID:   ')
             try: # try to convert input to integers
@@ -335,6 +343,7 @@ class ScheduleManager:
         
     def student_id_input(self):
         '''Gets student id input and validates, returns student ID'''
+        '''EXTRA helper function created'''
         while True:
             student_id = input('Enter student ID:   ')
             try: # try to convert input to integers
@@ -411,20 +420,20 @@ class ScheduleManager:
         course_id = self.course_input()
         
         student = self.find_student_by_id(student_id)
+        course = self.find_course_by_id(course_id)
         
         #extra function, checks if students are already enrolled in the course.
         if course_id in student.enrolled_course_ids:
             print(f'{student.name} is already enrolled in {course.name}.')
             return
-        student.enrolled_course_ids.append(course_id) # for the student, adds course id into their attribute
-        
-        course = self.find_course_by_id(course_id)
+        student.enrolled_course_ids.append(course_id) # for the student, adds course id into their attribute        
         course.enrolled_student_ids.append(student_id) # add the student id in the course attributes as well
         self._save_data()
         print('Data has been saved.')
         
 
     def reg_teacher(self):
+        '''Registers new teachers in the system'''
         name = input('Enter teachers name   ')
         speciality = input('Enter teachers speciality:  ')
         newTeacher = TeacherUser(self.next_teacher_id, name, speciality)
@@ -442,16 +451,15 @@ class ScheduleManager:
         
         '''
         
-        teacher_id = self.teacher_id_input()  # reuses your existing validator — handles int conversion + existence check
-        
-        teacher = self.find_teacher_by_id(teacher_id)
+        teacher_id = self.teacher_id_input()  # gains a valid teacher id from user
+        teacher = self.find_teacher_by_id(teacher_id) # extracts teacher object using helper function
         print(f'The teacher you are changing is {teacher.name} with speciality {teacher.speciality}')
         
         new_name = input("Enter teacher's updated name (or leave blank to keep current): ")
         new_speciality = input("Enter teacher's updated speciality (or leave blank to keep current): ")
         
         if new_name == '':
-            new_name = teacher.name
+            new_name = teacher.name 
         if new_speciality == '':
             new_speciality = teacher.speciality
         
@@ -462,5 +470,12 @@ class ScheduleManager:
         print(f'Teacher {teacher.id} updated. Name: {teacher.name}, Speciality: {teacher.speciality}')
             
             
-                
-                
+    def list_student(self):
+        '''lists all students in the data base'''
+        for student in self.students: #loops through all students and prints corresponding outputs
+            print(f" Name: {student.name} | ID: {student.id} | Enrolled in: {student.enrolled_course_ids} ")
+
+    def list_teachers(self):
+        '''List all teachers in the data base'''
+        for teacher in self.teachers:
+            print(f" Name: {teacher.name} | ID: {teacher.id} | Speciality: {teacher.speciality} ")       
