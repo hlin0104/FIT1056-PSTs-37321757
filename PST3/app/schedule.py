@@ -210,3 +210,257 @@ class ScheduleManager:
                 return teacher
         return None
         
+    # below are method attributes for a complete PST3 
+    def list_courses(self):
+        for course in self.courses: # creates a for loop for all courses, and prints corresponding parts.
+            print('='*10)
+            print()
+            print(f'Course ID: {course.id}')
+            print(f'Course Name: {course.name}')
+            print(f'Instrument: {course.instrument}')
+            print(f'Teacher ID: {course.teacher_id}')
+            print(f'Enrolled Student IDs: {course.enrolled_student_ids}')
+            print(f'Lessons: {course.lessons}')
+    
+    def reg_courses(self):
+        '''This is the extra function I coded, which registers new courses for library'''
+        name = input('Enter course name: ')
+        instrument = input('Enter instrument: ')
+        
+        # this is to validate teacher ID
+        while True:
+            teacher_id = input('Enter teacher ID: ')
+            try:
+                teacher_id = int(teacher_id)
+                teacher_exists = False # sets a temp variable which records if a teacher has been found,
+                for teacher in self.teachers:  #loops through all the teacher records
+                    if teacher.id == teacher_id: # loops through all teacher IDs to try and match
+                        teacher_exists = True
+                        break
+                if not teacher_exists:
+                    print(f'No teacher found with ID {teacher_id}.') 
+                    continue # loops back to the start, and allow user to input a new teacher ID
+                break
+            except ValueError:
+                print('Teacher ID must be an integer!')
+        
+        new_course = Course(self.next_course_id, name, instrument, teacher_id)
+        self.courses.append(new_course)
+        
+        print(f'Success: Course "{new_course.name}" (ID: {new_course.id}) has been registered.')
+        
+        self.next_course_id += 1   # increments the counter so the next course gets a fresh, unused ID
+        self._save_data()
+        print('Data has been saved')
+        
+    def course_input(self):
+        ''' This function performs course validation, to see if course ID entered by users are valid, and returns a course ID if valid'''
+        while True:
+            course_id = input('Enter course ID: ')
+            try:
+                course_id = int(course_id)
+                course = self.find_course_by_id(course_id)
+                if course is None:
+                    print(f'No course found with ID {course_id}. Please check again.')
+                    return None # breaks out so user can check for course IDs
+                break
+            except ValueError:
+                print('Course ID must be entered as an integer!')
+        return course_id
+        
+    def reg_lesson(self):
+        '''Registers a new lesson for an existing course'''
+        
+        # allows user to enter a course ID for the lesson
+        # validates if course ID exist
+        # again out of method if incorrect course ID is listed and ends function straight away
+        while True:
+            course_id = input('Enter course ID to add a lesson to: ')
+            try:
+                course_id = int(course_id)
+                course = self.find_course_by_id(course_id)
+                if course is None:
+                    print(f'No course found with ID {course_id}. Please check again.')
+                    return # breaks out so user can check for course IDs
+                break
+            except ValueError:
+                print('Course ID must be entered as an integer!')
+        
+        # validates day
+        while True:
+            day = input('Enter day (e.g., Monday): ')
+            if day.casefold() not in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']:
+                print('Invalid day entered! Please check again.')
+                continue # this loops because its just syntax
+            break
+        
+        start_time = input('Enter start time (eg: 16:00): ')
+        room = input('Enter room: ')
+        
+        new_lesson = {
+            'lesson_id': self.next_lesson_id,
+            'day': day,
+            'start_time': start_time,
+            'room': room
+        }
+        
+        course.lessons.append(new_lesson)
+        
+        print(f'Lesson added to "{course.name}" on {day} at {start_time} in {room}.')
+        
+        self.next_lesson_id += 1
+        self._save_data()
+        print('Data has been saved')
+        
+    def teacher_id_input(self):
+        '''Gets teacher ID inputs and validates, returns teacher ID'''
+        while True:
+            teacher_id = input('Enter teacher ID:   ')
+            try: # try to convert input to integers
+                teacher_id = int(teacher_id)
+                if teacher_id <= 0:
+                    print('Please enter a positive integer number!')
+                else:
+                    teacher_exists = False
+                    for teacher in self.teachers:
+                        if teacher.id == teacher_id:
+                            teacher_exists = True
+                            break
+                    if not teacher_exists:
+                        print(f'No teacher found with ID {teacher_id}. Please check again.')
+                        continue
+                    return teacher_id
+            except ValueError:
+                print('Please enter a valid integer value')
+        
+    def student_id_input(self):
+        '''Gets student id input and validates, returns student ID'''
+        while True:
+            student_id = input('Enter student ID:   ')
+            try: # try to convert input to integers
+                student_id = int(student_id)
+                if student_id <= 0:
+                    print('Please enter a positive integer number!')
+                else:
+                    if self.find_student_by_id(student_id) is None: # checks if there is such student in system
+                        print(f'No student found with ID {student_id}. Please check again.')
+                    else:
+                        return student_id
+            except ValueError:
+                print('Please enter an integer value.')
+        
+        
+    
+    # for students
+    
+    def reg_students(self):
+        ''' A function to register new students into system '''
+        name = input('Enter student name:   ')
+        course_id = self.course_input() # calls for a method attribute requesting user for a course_id
+        if course_id == None:
+            print('Students will be registered, but no course has been enrolled for this student.')
+            newStudent = StudentUser(self.next_student_id, name) #creates a new  object for student
+        else:
+            newStudent = StudentUser(self.next_student_id, name) #creates a new  object for student
+            newStudent.enrolled_course_ids = [course_id]
+            course = self.find_course_by_id(course_id) # this appends the student ID into the course
+            course.enrolled_student_ids.append(newStudent.id)
+            
+        self.next_student_id += 1 #updates next student id
+        self.students.append(newStudent) 
+        self._save_data()
+        
+    def remove_student(self, student_id):
+        """This function removes student from system given a student ID"""
+        student = self.find_student_by_id(student_id)
+        
+        #the if statement activates if no student has been found
+        if student is None:
+            print(f'Student with ID: {student_id} was not found!')
+            return #exits function
+        
+        self.students.remove(student)
+        print(f'Student {student.name} with ID: {student.id} has been removed from the system')
+        
+        # this is extra function, double checks if user removed the correct student
+        while True:
+            userinput = input('Did you remove the correct student (Y/N)?: ').casefold()
+            if userinput not in ('n', 'y'):
+                print('Wrong input, check again')
+            else:
+                break
+        
+        if userinput == 'n':
+            self.students.append(student)   # undo — put them back
+            print(f'{student.name} has been restored.')
+            return
+        
+        # we also need to remove the students from the course lists.
+        # this loops the courses that the students are enrolled in
+        for course_id in student.enrolled_course_ids:
+            course = self.find_course_by_id(course_id)
+            if course != None and student.id in course.enrolled_student_ids:
+                course.enrolled_student_ids.remove(student.id)
+        
+        self._save_data()
+        print('Data has been saved.')
+    
+    def enroll_students(self):
+        '''enrols student in avaliable courses'''
+        student_id = self.student_id_input()
+        course_id = self.course_input()
+        
+        student = self.find_student_by_id(student_id)
+        
+        #extra function, checks if students are already enrolled in the course.
+        if course_id in student.enrolled_course_ids:
+            print(f'{student.name} is already enrolled in {course.name}.')
+            return
+        student.enrolled_course_ids.append(course_id) # for the student, adds course id into their attribute
+        
+        course = self.find_course_by_id(course_id)
+        course.enrolled_student_ids.append(student_id) # add the student id in the course attributes as well
+        self._save_data()
+        print('Data has been saved.')
+        
+
+    def reg_teacher(self):
+        name = input('Enter teachers name   ')
+        speciality = input('Enter teachers speciality:  ')
+        newTeacher = TeacherUser(self.next_teacher_id, name, speciality)
+        self.teachers.append(newTeacher)
+        self.next_teacher_id += 1
+        self._save_data()
+        print('Data has been saved.')
+        
+    
+    
+    
+    def update_teacher_info(self):
+        '''
+        Validates user input and updates a teacher's name and speciality.
+        
+        '''
+        
+        teacher_id = self.teacher_id_input()  # reuses your existing validator — handles int conversion + existence check
+        
+        teacher = self.find_teacher_by_id(teacher_id)
+        print(f'The teacher you are changing is {teacher.name} with speciality {teacher.speciality}')
+        
+        new_name = input("Enter teacher's updated name (or leave blank to keep current): ")
+        new_speciality = input("Enter teacher's updated speciality (or leave blank to keep current): ")
+        
+        if new_name == '':
+            new_name = teacher.name
+        if new_speciality == '':
+            new_speciality = teacher.speciality
+        
+        teacher.name = new_name
+        teacher.speciality = new_speciality
+        
+        self._save_data()
+        print(f'Teacher {teacher.id} updated. Name: {teacher.name}, Speciality: {teacher.speciality}')
+            
+            
+                
+                
