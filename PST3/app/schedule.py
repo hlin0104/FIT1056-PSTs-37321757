@@ -54,11 +54,13 @@ class ScheduleManager:
                     self.courses.append(newCourse)               
                 
                 
-                # system tries to find the current id couner, sets to three if unable to locate any
+                # system tries to find the current id counter, sets to three if unable to locate any
                 # 3 because there are already two students/teachers in the system already.
                 # we can always make changes to it later 
                 self.next_student_id = data.get('next_student_id', 3) 
                 self.next_teacher_id = data.get('next_teacher_id', 3)
+                self.next_course_id = data.get('next_course_id', 104)
+                self.next_lesson_id =  data.get('next_lesson_id', 4)
                     
 
                 # TODO: Correctly load the attendance log.
@@ -80,7 +82,10 @@ class ScheduleManager:
             "attendance": self.attendance_log,
             # ... (next_id counters) ...
             'next_student_id': self.next_student_id,
-            'next_teacher_id': self.next_teacher_id
+            'next_teacher_id': self.next_teacher_id,
+            'next_course_id': self.next_course_id,
+            'next_lesson_id': self.next_lesson_id
+            
         }
         # TODO: Write 'data_to_save' to the JSON file.
         with open(self.data_path, 'w') as f:
@@ -88,28 +93,7 @@ class ScheduleManager:
             
     
     
-    # loops through teh list of student objects
-    # extracts the student ID and compare with given input ID
-    # returns the student if student_id found
-    def find_student_by_id(self, student_id):
-        """A new helper to find one student by their exact ID."""
-        # TODO: Loop through student_db. If a student's ID matches student_id, return the student object.
-        for student in self.students:
-            if student.id == student_id:
-                return student
-        # TODO: If the loop finishes without finding a match, return None.
-        return None
-    
 
-    # loops through teh list of courses objects
-    # extracts the course ID and compare with given input ID
-    # returns the curse if course_id found
-    def find_course_bu_id(self, course_id):
-        for course in self.courses:
-            if course_id == course.id:
-                return course
-        return None
-        
 
     def check_in(self, student_id, course_id):
         import datetime
@@ -137,10 +121,92 @@ class ScheduleManager:
         '''an extra function that checks for lessons on a given day'''
         lessonFound = [] #empty list to store information later
         for course in self.courses: #cycles through all the courses in library
-            for lesson in course.lesson: # cycles through all the lesson time for each course
+            for lesson in course.lessons: # cycles through all the lesson time for each course
                 if day.casefold() == lesson['day'].casefold():
                     lessonFound.append(lesson) #append lesson to list if found day matching.
-        
-        return None
+        return lessonFound
+    
+    
+    def switch_course(self, student_id, from_course_id, to_course_id):
+        '''Defines a function to switch course for a student'''
+        # TODO: Implement the logic to switch a student by calling methods on the manager.
+        for student in self.students: #first loops through all students to locate which student to move
+            if student.id == student_id:
+                validating = True
+                
+                #added an extra feature to clarify if user entered the correct student ID
+                while validating:
+                    tempChoice = input(f'Are you trying to change details for {student.name}? (y/n)  ')
+                    if tempChoice.casefold() not in ['y', 'n']:
+                        print('Invalid input! Please enter a single character.')
+                    else:
+                        validating = False
+                
+                
+                if tempChoice.casefold() == 'y': #if user confirmed that they are changing the correct students
+                    
+                    # checks if students is enrolled in the course provided
+                    if from_course_id in student.enrolled_course_ids:
+                        student.enrolled_course_ids.remove(from_course_id) # removes old course
+                        student.enrolled_course_ids.append(to_course_id) # adds new course in student library
+                        
+                        # prints message 
+                        print(f"{student.name} has been changed from {from_course_id} to {to_course_id}!")
+                        print(f"They are currently enrolled in: {student.enrolled_course_ids}")
+                        
+                        for course in self.courses:
+                            if course.id == from_course_id:
+                                course.enrolled_student_ids.remove(student.id)
+                            if course.id == to_course_id:
+                                course.enrolled_student_ids.append(student.id)
+                    
+                        
+                        self._save_data() # saves data
+                        print('Data has been saved')
+                        return
+                    
+                    # Prints out a message if a student has been found, but they are are not enrolled in the course provided.
+                    else:
+                        print('No course has been found to be replaced! Please check again.')
+                        return
+                
+                # if user said this wasn't the student they are changing, they will return to the main menu
+                else:
+                    print('Returning to main menu...')
+                    return
+                
+        # this prints a message if no students has been found.        
+        print(f'No student found with student ID {student_id}')
 
     # TODO: Also implement find_student_by_id and find_course_by_id helper methods.
+    
+    # loops through teh list of student objects
+    # extracts the student ID and compare with given input ID
+    # returns the student if student_id found
+    def find_student_by_id(self, student_id):
+        """A new helper to find one student by their exact ID."""
+        # TODO: Loop through student_db. If a student's ID matches student_id, return the student object.
+        for student in self.students:
+            if student.id == student_id:
+                return student
+        # TODO: If the loop finishes without finding a match, return None.
+        return None
+    
+
+    # loops through the list of courses objects
+    # extracts the course ID and compare with given input ID
+    # returns the curse if course_id found
+    def find_course_by_id(self, course_id):
+        '''finds courses, return course object'''
+        for course in self.courses:
+            if course_id == course.id:
+                return course
+        return None
+        
+    def find_teacher_by_id(self, teacher_id):
+        '''finds teachers using teacher ID, returns teacher object'''
+        for teacher in self.teachers:
+            if teacher_id == teacher.id:
+                return teacher
+        return None
+        
