@@ -72,7 +72,7 @@ class ScheduleManager:
             # sets default values to starting numbers if no files has been found.
             self.next_student_id = 1
             self.next_teacher_id = 1
-            self.next_course_id = 100
+            self.next_course_id = 101
             self.next_lesson_id =  1
 
     def _save_data(self):
