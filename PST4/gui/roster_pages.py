@@ -22,12 +22,16 @@ def show_roster_page(manager):
         st.subheader("Student Check-in")
         with st.form("check_in_form"):
             
-            
+            # these creates selected boxes for the users to choose
+            # the lambda function creates the formatting of how the options will be displayed to the UI
             selected_student = st.selectbox("Select Student", student_list, format_func= lambda item: f'{item[0]} with ID: {item[1]}')
             selected_course = st.selectbox("Select Course", course_list_dependent_on_day, format_func= lambda i: i.name)
             
+            #this detects whether if the button is pressed
+            # the button isnt allowed to be pressed unless a student and a course has been selected
             submitted = st.form_submit_button("Check-in Student", disabled= not selected_course or not selected_student)
 
+            
             if submitted:
                 # Convert the selected names back to IDs
                 student_id = selected_student[1]

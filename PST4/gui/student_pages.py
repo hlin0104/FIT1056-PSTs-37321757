@@ -7,14 +7,22 @@ def show_student_management_page(manager):
 
     # --- Search Section (remains the same) ---
     st.subheader("Find a Student")
+    
+    #asks the user if they wanna find students by entering a name or an id
     temp_choice = st.selectbox("Find student by", ['id', 'name'])
+    
+    # creates a form that covers the number/ text inputs, so it clears once submitted to prevent double clicking
     with st.form('find students', clear_on_submit=True):
         if temp_choice == 'id':
-            requested_id = st.number_input('Enter the Student ID', min_value=1, step=1)
+            # extra feature i added, where the user can just adjust the id without retyping
+            requested_id = st.number_input('Enter the Student ID', min_value=1, step=1) 
         else:
             requested_name =  st.text_input("Enter the Student Name")
-            requested_name = requested_name.strip()
+            requested_name = requested_name.strip() #stripping it to prevent unwanted space
+        #creating that button
         search = st.form_submit_button('Search')
+        
+        # if they pressed the button and chose ID as method of searching
         if search and temp_choice == 'id':
             student = st.session_state.manager.find_student_by_id(requested_id)
             if student == None:
@@ -23,6 +31,9 @@ def show_student_management_page(manager):
                 st.write(f'Name: {student.name}')
                 st.write(f'Id: {student.id}')
                 st.write(f'Enrolled in Courses {student.enrolled_course_ids}')
+                
+        # if they pressed the button and chose name as method of searching
+        # I couldn't combine these two because they have different error messages
         elif search and temp_choice == 'name':
                 student_list = st.session_state.manager.find_student_by_name(requested_name)
                 if student_list == None:
@@ -37,6 +48,8 @@ def show_student_management_page(manager):
 
     # --- Registration Section (now works correctly) ---
     st.subheader("Register New Student")
+    
+    #again, creating a form so it clears once submitted 
     with st.form("registration_form", clear_on_submit=True):
         reg_name = st.text_input("New Student Name")
         

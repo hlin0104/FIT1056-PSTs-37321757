@@ -17,10 +17,12 @@ def launch():
 
     st.sidebar.title("MSMS Navigation")
     # Create a radio button menu in the sidebar for page navigation.
-    # is there a way to change the position of the side bar?
-    page = st.sidebar.radio("Go to", ["Student Management", "Daily Roster", "Payments (stub)"])
+
+    page = st.sidebar.radio("Go to", ["Student Management", "Daily Roster", "Payments (stub)"]) 
 
     # Use an if/elif block to call the correct function to render the selected page.
+    # the radio only allows the user to choose one page at a time
+    # and we have functions in the other files for the proper displacement
     if page == "Student Management":
         show_student_management_page(st.session_state.manager)
     elif page == "Daily Roster":

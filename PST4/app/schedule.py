@@ -510,7 +510,7 @@ class ScheduleManager:
         return names
     
     def course_list(self):
-        ''' this is a utility function that lists all of the course name available to the students to register'''
+        ''' this is a utility function that lists all of the courses'''
         course_lists = []
         for course in self.courses:
             course_lists.append(course)
@@ -524,6 +524,7 @@ class ScheduleManager:
         return student_lists
     
     def find_course_on_day(self, day):
+        '''Utility function that filters the courses dependent on a given day'''
         lists = []
         for c in self.course_list():
             for l in c.lessons:
