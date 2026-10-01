@@ -9,30 +9,35 @@ def show_roster_page(manager):
     # --- View Roster Section (remains the same) ---
     day = st.selectbox("Select a day", ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"])
     # ... (code to display the dataframe) ...
-    
-    # --- Student Check-in Section (now works correctly) ---
-    st.subheader("Student Check-in")
-    with st.form("check_in_form"):
-        # To make this user-friendly, we should populate the dropdowns dynamically.
-        # Get lists of student names and course names from the manager.
-        student_list = {s.name: s.id for s in manager.students}
-        course_list = {c.name: c.id for c in manager.courses}
+    # To make this user-friendly, we should populate the dropdowns dynamically.
+    # Get lists of student names and course names from the manager.
+    student_list = manager.student_list()
+    course_list_dependent_on_day = manager.find_course_on_day(day)
+    if course_list_dependent_on_day == None:
+        st.write(f'No courses running on {day}')
+    else:
+
         
-        selected_student_name = st.selectbox("Select Student", student_list.keys())
-        selected_course_name = st.selectbox("Select Course", course_list.keys())
-        
-        submitted = st.form_submit_button("Check-in Student")
+        # --- Student Check-in Section (now works correctly) ---
+        st.subheader("Student Check-in")
+        with st.form("check_in_form"):
+            
+            
+            selected_student = st.selectbox("Select Student", student_list, format_func= lambda item: f'{item[0]} with ID: {item[1]}')
+            selected_course = st.selectbox("Select Course", course_list_dependent_on_day, format_func= lambda i: i.name)
+            
+            submitted = st.form_submit_button("Check-in Student", disabled= not selected_course or not selected_student)
 
-        if submitted:
-            # Convert the selected names back to IDs
-            student_id = student_list[selected_student_name]
-            course_id = course_list[selected_course_name]
+            if submitted:
+                # Convert the selected names back to IDs
+                student_id = selected_student[1]
+                course_id = selected_course.id
 
-            # This call now works because we implemented the method in PST3.
-            success = manager.check_in(student_id, course_id)
+                # This call now works because we implemented the method in PST3.
+                success = manager.check_in(student_id, course_id)
 
-            if success:
-                st.success(f"Checked in {selected_student_name} for {selected_course_name}!")
-            else:
-                # The manager's print statements will go to the console, but we can add a GUI error too.
-                st.error("Check-in failed. See console for details. (Is the student enrolled in that course?)")
+                if success:
+                    st.success(f"Checked in {selected_student[0]} for {selected_course.name}!")
+                else:
+                    # The manager's print statements will go to the console, but we can add a GUI error too.
+                    st.error("Check-in failed. See console for details. (Is the student enrolled in that course?)")

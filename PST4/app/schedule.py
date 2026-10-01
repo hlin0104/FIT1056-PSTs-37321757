@@ -107,6 +107,8 @@ class ScheduleManager:
             print("Error: Check-in failed. Invalid Student or Course ID.")
             return False
             
+        if course.id not in student.enrolled_course_ids:
+            return False
         timestamp = datetime.datetime.now().isoformat()
         check_in_record = {"student_id": student_id, "course_id": course_id, "timestamp": timestamp}
         
@@ -506,3 +508,31 @@ class ScheduleManager:
             if course.name not in names:
                 names.append(course.name)
         return names
+    
+    def course_list(self):
+        ''' this is a utility function that lists all of the course name available to the students to register'''
+        course_lists = []
+        for course in self.courses:
+            course_lists.append(course)
+        return course_lists
+    
+    def student_list(self):
+        ''' this is a utility function that lists all of the students'''
+        student_lists = []
+        for student in self.students:
+            student_lists.append([student.name,student.id])
+        return student_lists
+    
+    def find_course_on_day(self, day):
+        lists = []
+        for c in self.course_list():
+            for l in c.lessons:
+                if day.casefold() == l['day'].casefold():
+                    lists.append(c)
+                    break
+        if len(lists) == 0:
+            return None
+        else:
+            return lists
+                
+                
