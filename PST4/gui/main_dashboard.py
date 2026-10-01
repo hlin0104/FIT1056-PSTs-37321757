@@ -10,11 +10,14 @@ def launch():
 
     # Instantiate the "brain" of our app ONCE and store it in the session state.
     # This is crucial so the manager object persists as we switch pages.
+    # this adds a session state value for manager every time we type streamlit run main.py, and use the same 'manager' throughout
+    # so it wouldn't overwrite the data every time we re-run
     if 'manager' not in st.session_state:
         st.session_state.manager = ScheduleManager()
 
     st.sidebar.title("MSMS Navigation")
     # Create a radio button menu in the sidebar for page navigation.
+    # is there a way to change the position of the side bar?
     page = st.sidebar.radio("Go to", ["Student Management", "Daily Roster", "Payments (stub)"])
 
     # Use an if/elif block to call the correct function to render the selected page.
